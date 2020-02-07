@@ -1,0 +1,16 @@
+[
+  {
+    "fileName": "something.spec.ts",
+    "filePath": "/path/something.spec.ts",
+    "tests": [
+      {
+        "description": "returns 'che!'",
+        "code": "() => { expect(something(15)).toBe('che!'); }"
+      },
+      {
+        "description": "returns 'blah'",
+        "code": "() => { expect(something(7)).toBe('blah'); }"
+      }
+    ]
+  }
+]
