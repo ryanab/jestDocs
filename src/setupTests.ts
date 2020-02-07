@@ -1,29 +1,27 @@
-// jest-dom adds custom jest matchers for asserting on DOM nodes.
-// allows you to do things like:
-// expect(element).toHaveTextContent(/react/i)
-// learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
-
-// "plugin"
+import union from "lodash.union"
+import deepmerge from "deepmerge";
 
 const jestTest = (global as any).test;
+let collection = {};
 
 if (jestTest != null) {
-  // const newTest = (description: string, cb: Function) => {
-  //   return {
-  //     withDocumentation: (anyObject: any) => {
-  //       jestTest(description, cb);
-
-  //       console.log(anyObject);
-  //     }
-  //   };
-  // };
-  const newTest = (description: string, cb: Function, metadata: any) => {
+  const newTest = (description: string, cb: Function, data: any) => {
     jestTest(description, cb);
-
-    console.log('metadata', metadata);
+    const fileName = data?.metaData?.fileName || "global";
+    if(!collection[fileName]) {
+      collection[fileName] = data;
+      collection[fileName].tests = [];
+    } else {
+      collection[fileName].metaData = deepmerge(collection[fileName].metaData, data.metaData);
+    }
+    collection[fileName].tests.push({
+      type: "test",
+      code: cb.toString(),
+      metadata: data.metaData
+    });
+    console.log(collection)
   };
-
   (global as any).test = newTest;
 } else {
   console.error('Jest "test" not found');
